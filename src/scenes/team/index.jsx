@@ -1,72 +1,93 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { mockDataTeam } from "../../data/mockData";
+import Switch from 'react-switch';
+
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import Header from "../../components/Header";
+import axios from 'axios';
+import { BiCheckboxSquare, BiCheckDouble, BiCheck, BiX } from "react-icons/bi";
+
+import React, { useState, useEffect } from "react";
 
 const Team = () => {
+  const [adminsdata, setAdminsdata] = useState([{ _id: '', username: '', email: '', activePlan: 0, savedTemplatesCount: 0, isToggled: true }]);
+
+  const [totalLiveWebs, setTotalLiveWebs] = useState(0);
+  const [totalMessages, setTotalMessages] = useState(0);
+  const [totalPayments, setTotalPayments] = useState(0);
+
+
+
+  const handleToggle = (params) => {
+    const updatedAdminsdata = adminsdata.map((admin) =>
+      admin.email === params.row.email
+        ? { ...admin, isToggled: !admin.isToggled }
+        : admin
+    );
+    setAdminsdata(updatedAdminsdata);
+  };
+  
+  
+
+  useEffect(() => {
+    axios.get("http://localhost:8800/api/superadmin/registeredadmins")
+      .then((response) => {
+        console.log("in useeffect, getting admins and this is count " + response.data.count);
+      })
+      .catch(error => console.log(error));
+  
+    axios.get("http://localhost:8800/api/superadmin/getalldataofadmins")
+      .then(res => {
+        const initialAdminsData = res.data.map(admin => ({...admin, isToggled: true}));
+        setAdminsdata(initialAdminsData);
+        setTotalLiveWebs(initialAdminsData.reduce((sum, admin) => sum + admin.activePlan, 0));
+        console.log("this is admins data+ " + initialAdminsData);
+      })
+      .catch(error => console.log(error));
+  
+    axios.get("http://localhost:8800/api/superadmin/gettotalpaymentsandmessages")
+      .then(res => {
+        setTotalMessages(res.data.messages.length);
+        setTotalPayments(res.data.payments.length);
+        console.log("this is messages+ ");
+      })
+      .catch(error => console.log(error));
+  }, []);
+  
+
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const columns = [
-    { field: "id", headerName: "ID" },
+    { field: "_id", headerName: "ID" },
+    { field: "username", headerName: "Username", flex: 1 },
+    { field: "email", headerName: "Email", flex: 1 },
+    { field: "activePlan", headerName: "Active Plan", type: "number", flex: 1 },
+    { field: "savedTemplatesCount", headerName: "Saved Templates", type: "number", flex: 1 },
     {
-      field: "name",
-      headerName: "Name",
-      flex: 1,
-      cellClassName: "name-column--cell",
-    },
-    {
-      field: "age",
-      headerName: "Age",
-      type: "number",
-      headerAlign: "left",
-      align: "left",
-    },
-    {
-      field: "phone",
-      headerName: "Phone Number",
-      flex: 1,
-    },
-    {
-      field: "email",
-      headerName: "Email",
+      field: "isToggled",
+      headerName: "Status",
+      renderCell: (params) => (
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Typography>{params.value ? "ON" : "OFF"}</Typography>
+          <Switch
+            checked={params.row.isToggled}
+            onChange={() => handleToggle(params)}
+
+          />
+        </Box>
+      ),
       flex: 1,
     },
-    {
-      field: "accessLevel",
-      headerName: "Access Level",
-      flex: 1,
-      renderCell: ({ row: { access } }) => {
-        return (
-          <Box
-            width="60%"
-            m="0 auto"
-            p="5px"
-            display="flex"
-            justifyContent="center"
-            backgroundColor={
-              access === "admin"
-                ? colors.greenAccent[600]
-                : access === "manager"
-                ? colors.greenAccent[700]
-                : colors.greenAccent[700]
-            }
-            borderRadius="4px"
-          >
-            {access === "admin" && <AdminPanelSettingsOutlinedIcon />}
-            {access === "manager" && <SecurityOutlinedIcon />}
-            {access === "user" && <LockOpenOutlinedIcon />}
-            <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-              {access}
-            </Typography>
-          </Box>
-        );
-      },
-    },
+    
+    
+    
+
+
   ];
+
 
   return (
     <Box m="20px">
@@ -100,9 +121,14 @@ const Team = () => {
           },
         }}
       >
-        <DataGrid checkboxSelection rows={mockDataTeam} columns={columns} />
+
+       <DataGrid checkboxSelection rows={adminsdata} columns={columns} getRowId={(row) => row.email} 
+/>
+
       </Box>
+      
     </Box>
+    
   );
 };
 

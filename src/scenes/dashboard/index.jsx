@@ -8,14 +8,78 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import TrafficIcon from "@mui/icons-material/Traffic";
 import Header from "../../components/Header";
 import LineChart from "../../components/LineChart";
-import GeographyChart from "../../components/GeographyChart";
+
 import BarChart from "../../components/BarChart";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
-
+import { BiCheckboxSquare, BiCheckDouble, BiCheck, BiX } from "react-icons/bi";
+import React from "react";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from 'axios'
+import PieChart from "../../components/PieChart";
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+
+  const [count, setCount] = useState('')
+  const [adminsdata, setAdminsdata]= useState();
+  const [transactionData, setTransactionData]= useState([]);
+  const [totalLiveWebs, setTotalLiveWebs] = useState(0);
+  const [totalMessages, setTotalMessages] = useState(0);
+  const [totalPayments, setTotalPayments] = useState(0);
+
+
+
+
+
+  useEffect(() => {
+      console.log("in useeffect, getting admins and this iscount "+{count})
+      axios.get("http://localhost:8800/api/superadmin/registeredadmins")
+      .then((response) => {
+        setCount(response.data.count);
+        console.log("this is count respnse+ "+response.data.count)
+      });
+      console.log("this is count+ "+count)
+
+       axios.get("http://localhost:8800/api/superadmin/getadminsdata")
+      .then(res => {
+
+        setAdminsdata(res.data.adminsData);
+        setTotalLiveWebs(res.data.totalLiveWebs);
+
+        console.log("thisi s admins data+ "+adminsdata)
+      })
+      .catch(error => console.log(error));
+
+      axios.get("http://localhost:8800/api/superadmin/gettotalpaymentsandmessages")
+      .then(res => {
+
+        setTotalMessages(res.data.messages.length);
+        setTotalPayments(res.data.payments.length);
+        console.log("this is messages+ ")
+
+      })
+      .catch(error => console.log(error));
+
+      axios.get("http://localhost:8800/api/superadmin/gettransactions")
+    .then((response) => {
+      setTransactionData(response.data)
+    console.log(response.data+"this is transactions data");
+    })
+    .catch((error) => {
+    console.error(error);
+    });
+    
+
+    }, [count,totalLiveWebs,totalPayments,totalMessages]);
+
+    adminsdata && adminsdata.map((row,index) => (
+      console.log("this is map: "+ row.savedTemplatesCount)
+    ))
+
+
 
   return (
     <Box m="20px">
@@ -24,18 +88,7 @@ const Dashboard = () => {
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
 
         <Box>
-          <Button
-            sx={{
-              backgroundColor: colors.blueAccent[700],
-              color: colors.grey[100],
-              fontSize: "14px",
-              fontWeight: "bold",
-              padding: "10px 20px",
-            }}
-          >
-            <DownloadOutlinedIcon sx={{ mr: "10px" }} />
-            Download Reports
-          </Button>
+
         </Box>
       </Box>
 
@@ -55,10 +108,10 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="12,361"
-            subtitle="Emails Sent"
+            title={totalMessages}
+            subtitle="Messages"
             progress="0.75"
-            increase="+14%"
+          
             icon={
               <EmailIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -74,10 +127,10 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="431,225"
-            subtitle="Sales Obtained"
+            title={totalLiveWebs}
+            subtitle="Live Websites"
             progress="0.50"
-            increase="+21%"
+          
             icon={
               <PointOfSaleIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -93,10 +146,10 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="32,441"
-            subtitle="New Clients"
+            title={count}
+            subtitle="Total Users"
             progress="0.30"
-            increase="+5%"
+
             icon={
               <PersonAddIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -112,10 +165,10 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="1,325,134"
-            subtitle="Traffic Received"
+            title={totalPayments}
+            subtitle="Payments"
             progress="0.80"
-            increase="+43%"
+     
             icon={
               <TrafficIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -125,46 +178,7 @@ const Dashboard = () => {
         </Box>
 
         {/* ROW 2 */}
-        <Box
-          gridColumn="span 8"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-        >
-          <Box
-            mt="25px"
-            p="0 30px"
-            display="flex "
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Box>
-              <Typography
-                variant="h5"
-                fontWeight="600"
-                color={colors.grey[100]}
-              >
-                Revenue Generated
-              </Typography>
-              <Typography
-                variant="h3"
-                fontWeight="bold"
-                color={colors.greenAccent[500]}
-              >
-                $59,342.32
-              </Typography>
-            </Box>
-            <Box>
-              <IconButton>
-                <DownloadOutlinedIcon
-                  sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
-                />
-              </IconButton>
-            </Box>
-          </Box>
-          <Box height="250px" m="-20px 0 0 0">
-            <LineChart isDashboard={true} />
-          </Box>
-        </Box>
+
         <Box
           gridColumn="span 4"
           gridRow="span 2"
@@ -183,9 +197,9 @@ const Dashboard = () => {
               Recent Transactions
             </Typography>
           </Box>
-          {mockTransactions.map((transaction, i) => (
+          {transactionData.map((transaction, i) => (
             <Box
-              key={`${transaction.txId}-${i}`}
+             
               display="flex"
               justifyContent="space-between"
               alignItems="center"
@@ -198,51 +212,45 @@ const Dashboard = () => {
                   variant="h5"
                   fontWeight="600"
                 >
-                  {transaction.txId}
+                  {transaction.activePlan}
                 </Typography>
                 <Typography color={colors.grey[100]}>
                   {transaction.user}
                 </Typography>
               </Box>
-              <Box color={colors.grey[100]}>{transaction.date}</Box>
+              <Box color={colors.grey[100]}>{transaction.paymentDate}</Box>
               <Box
                 backgroundColor={colors.greenAccent[500]}
                 p="5px 10px"
                 borderRadius="4px"
               >
-                ${transaction.cost}
+                ${transaction.amount}
               </Box>
+
             </Box>
           ))}
         </Box>
 
         {/* ROW 3 */}
-        <Box
+  
+                  <Box
           gridColumn="span 4"
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
-          p="30px"
         >
-          <Typography variant="h5" fontWeight="600">
-            Campaign
-          </Typography>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            mt="25px"
+          <Typography
+            variant="h5"
+            fontWeight="600"
+            sx={{ padding: "30px 30px 0 30px" }}
           >
-            <ProgressCircle size="125" />
-            <Typography
-              variant="h5"
-              color={colors.greenAccent[500]}
-              sx={{ mt: "15px" }}
-            >
-              $48,352 revenue generated
-            </Typography>
-            <Typography>Includes extra misc expenditures and costs</Typography>
+            Sales Quantity
+          </Typography>
+          <Box height="250px" mt="-20px">
+            <PieChart isDashboard={true} />
           </Box>
         </Box>
+
+        
         <Box
           gridColumn="span 4"
           gridRow="span 2"
@@ -259,23 +267,7 @@ const Dashboard = () => {
             <BarChart isDashboard={true} />
           </Box>
         </Box>
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          padding="30px"
-        >
-          <Typography
-            variant="h5"
-            fontWeight="600"
-            sx={{ marginBottom: "15px" }}
-          >
-            Geography Based Traffic
-          </Typography>
-          <Box height="200px">
-            <GeographyChart isDashboard={true} />
-          </Box>
-        </Box>
+
       </Box>
     </Box>
   );
