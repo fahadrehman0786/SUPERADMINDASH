@@ -85,7 +85,7 @@ const Dashboard = () => {
     <Box m="20px">
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
+        <Header title="DASHBOARD" subtitle="uCraft Super Admin Dashboard" />
 
         <Box>
 
@@ -101,6 +101,7 @@ const Dashboard = () => {
       >
         {/* ROW 1 */}
         <Box
+        
           gridColumn="span 3"
           backgroundColor={colors.primary[400]}
           display="flex"
@@ -109,12 +110,15 @@ const Dashboard = () => {
         >
           <StatBox
             title={totalMessages}
+            
             subtitle="Messages"
             progress="0.75"
+            
           
             icon={
               <EmailIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              style={{color:'#40AFC0'}}
+                sx={{ fontSize: "26px" }}
               />
             }
           />
@@ -133,7 +137,8 @@ const Dashboard = () => {
           
             icon={
               <PointOfSaleIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              style={{color:'#40AFC0'}}
+                sx={{fontSize: "26px" }}
               />
             }
           />
@@ -152,7 +157,8 @@ const Dashboard = () => {
 
             icon={
               <PersonAddIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              style={{color:'#40AFC0'}}
+                sx={{  fontSize: "26px" }}
               />
             }
           />
@@ -171,7 +177,8 @@ const Dashboard = () => {
      
             icon={
               <TrafficIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              style={{color:'#40AFC0'}}
+                sx={{ fontSize: "26px" }}
               />
             }
           />
@@ -208,7 +215,7 @@ const Dashboard = () => {
             >
               <Box>
                 <Typography
-                  color={colors.greenAccent[500]}
+                  style={{color:'#40AFC0'}}
                   variant="h5"
                   fontWeight="600"
                 >
@@ -220,7 +227,7 @@ const Dashboard = () => {
               </Box>
               <Box color={colors.grey[100]}>{transaction.paymentDate}</Box>
               <Box
-                backgroundColor={colors.greenAccent[500]}
+                backgroundColor='#40AFC0'
                 p="5px 10px"
                 borderRadius="4px"
               >
@@ -245,7 +252,8 @@ const Dashboard = () => {
           >
             Sales Quantity
           </Typography>
-          <Box height="250px" mt="-20px">
+          <Box height="250px" mt="-20px"
+          >
             <PieChart isDashboard={true} />
           </Box>
         </Box>

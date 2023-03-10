@@ -10,13 +10,22 @@ import React, { useState, useEffect } from "react";
 import ReplyForm from "../../components/ReplyForm";
 
 const Messages = () => {
+  const [email, setEmail] = useState('')
+
+
+
   const [fetchData, setFetchData] = useState(true);
 
   const [open, setOpen]= useState(false);
   const [messageData, setMessageData]= useState([]);
-  const handleReply = (params) => {
-    setOpen(true);
+  const handleReply = async (params) => {
+
+     await setEmail(params.row.email)
+
     console.log(params.row.email); // log the email of the selected row
+    setOpen(true)
+
+
   };
   
   useEffect(() => {
@@ -97,7 +106,7 @@ const Messages = () => {
 />
       </Box>
     </Box>
-          {open && <ReplyForm open={open} setOpen={setOpen}></ReplyForm>}
+          {open && <ReplyForm email = {email} open={open} setOpen={setOpen}></ReplyForm>}
           </>
 
   );

@@ -133,4 +133,31 @@ const getTotalPaymentsAndMessages = async (req, res) => {
     }
   
     }
-  module.exports = {registeredAdmins, getEmailAndUsernameOfAdmins, getTotalPaymentsAndMessages, getAllDataOfAdmins, getTransactions, getMessages};
+
+    const getInvoices = async (req, res)=>{
+      try {
+        const admins = await Admin.find({ transactionID: { $exists: true } })
+          .populate({
+            path: 'transactionID',
+            select: 'activePlan amount'
+          })
+          .select('username email accountStatus transactionID');
+    
+        const result = admins.map((admin) => {
+          return {
+            username: admin.username,
+            email: admin.email,
+            accountStatus: admin.accountStatus,
+            activePlan: admin.transactionID.activePlan,
+            amount: admin.transactionID.amount
+          }
+        });
+    
+        res.json(result);
+      } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+      }
+
+    }
+  module.exports = {registeredAdmins, getEmailAndUsernameOfAdmins, getTotalPaymentsAndMessages, getAllDataOfAdmins, getTransactions, getMessages, getInvoices};

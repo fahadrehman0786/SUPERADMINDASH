@@ -70,48 +70,34 @@ const styles = {
 };
 
 
-const ReplyForm = ({open, setOpen}) => {
+const ReplyForm = ({email, open, setOpen}) => {
 
     const [subject, setSubject] = useState('');
-    const [message, setMessage] = useState('');
+    const [messages, setMessages] = useState('');
 
     const handleSubject = (event)=>{
         setSubject(event.target.value)
 
     }
     const handleMessage = (event)=>{
-        setMessage(event.target.value)
+        setMessages(event.target.value)
     }
  
  
   const handleSubmit =async(event)  => {
     event.preventDefault();
     console.log("in submit1")
-     await fetch(`http://localhost:3000/editproduct/`, {
-      method: "PUT",
-      crossDomain: true,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify({
+    console.log("this is email: "+email)
+    console.log("this is sub+ "+ subject)
+    console.log("this is message+ "+ messages)
+    axios.post("http://localhost:8800/api/superadmin/mailer",{email, subject, messages } )
+    .then((response) => {
  
-   
-      }),
+      console.log(response.data + "this is mailer response");
     })
-      .then((res) => res.json()).   then((data)=>{
-        
-        console.log(data.Product)
-        setOpen(false)
-       
-      })
-      console.log("in submit2")
-      axios.get("http://localhost:3000/getProducts")
-      .then((response) => {
-
-      });
-      console.log("in submit3")
+    .catch((error) => {
+      console.error(error);
+    })
 
   };
 

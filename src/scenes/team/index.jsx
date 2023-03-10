@@ -61,7 +61,7 @@ const Team = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const columns = [
-    { field: "_id", headerName: "ID" },
+
     { field: "username", headerName: "Username", flex: 1 },
     { field: "email", headerName: "Email", flex: 1 },
     { field: "activePlan", headerName: "Active Plan", type: "number", flex: 1 },
@@ -71,7 +71,7 @@ const Team = () => {
       headerName: "Status",
       renderCell: (params) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Typography>{params.value ? "ON" : "OFF"}</Typography>
+
           <Switch
             checked={params.row.isToggled}
             onChange={() => handleToggle(params)}
@@ -122,7 +122,7 @@ const Team = () => {
         }}
       >
 
-       <DataGrid checkboxSelection rows={adminsdata} columns={columns} getRowId={(row) => row.email} 
+       <DataGrid checkboxSelection = {false} rows={adminsdata} columns={columns} getRowId={(row) => row.email} 
 />
 
       </Box>
