@@ -2,14 +2,33 @@ import { useTheme } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
 import { tokens } from "../theme";
 import { mockBarData as data } from "../data/mockData";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const BarChart = ({ isDashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [barChartData, setBarChartData] = useState([]);
 
+  const customColors = ["#40AFC0", "orange", "yellow"];
+    useEffect(() => {
+
+      axios.get("http://localhost:8800/api/superadmin/getbarchartdata")
+        .then((response) => {
+
+          setBarChartData(response.data)
+          console.log(response.data + "this is transactions data");
+        })
+        .catch((error) => {
+          console.error(error);
+          console.log(error.response.data); // log the error message from the server
+        })
+
+  }, []);
   return (
-    <ResponsiveBar
-      data={data}
+    <>
+   { barChartData && <ResponsiveBar
+      data={barChartData}
      
       theme={{
         // added
@@ -46,7 +65,8 @@ const BarChart = ({ isDashboard = false }) => {
       padding={0.3}
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
-      colors={{ scheme: "nivo" }}
+      colors={customColors}
+   
       defs={[
         {
           id: "dots",
@@ -125,6 +145,8 @@ const BarChart = ({ isDashboard = false }) => {
         return e.id + ": " + e.formattedValue + " in country: " + e.indexValue;
       }}
     />
+   }
+   </>
   );
 };
 

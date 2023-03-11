@@ -2,15 +2,35 @@ import { ResponsivePie } from "@nivo/pie";
 import { tokens } from "../theme";
 import { useTheme } from "@mui/material";
 import { mockPieData as data } from "../data/mockData";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const PieChart = () => {
+  const [pieChartData, setPieChartData] = useState([]);
+
+
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const chartColors = ["#40AFC0", "orange", "yellow"];
+  const chartColors = ["#40AFC0", "orange", "yellow", "green"];
+
+  useEffect(() => {
+    
+      axios.get("http://localhost:8800/api/superadmin/getpiechartdata")
+        .then((response) => {
+          setPieChartData(response.data);
+          console.log(response.data + "this is pie data");
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+
+  
+  },[]);
+
 
   return (
     <ResponsivePie
-      data={data}
+      data={pieChartData}
       colors={chartColors}
       theme={{
         axis: {
