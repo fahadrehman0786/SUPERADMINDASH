@@ -16,6 +16,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import Calendar from "./scenes/calendar/calendar";
 import Messages from "./scenes/messages";
+import LiveWebsites from "./scenes/livewebsites";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -38,10 +39,8 @@ function App() {
               <Route path="/bar" element={<Bar />} />
               <Route path="/pie" element={<Pie />} />
             
-
-
-
               <Route path="/messages" element={<Messages />} />
+              <Route path="/livewebs" element={<LiveWebsites />} />
             </Routes>
           </main>
         </div>
@@ -49,5 +48,4 @@ function App() {
     </ColorModeContext.Provider>
   );
 }
-
 export default App;

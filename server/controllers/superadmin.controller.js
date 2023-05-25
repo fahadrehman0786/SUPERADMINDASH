@@ -3,6 +3,7 @@ const Payment = require("../models/Payment")
 const Message = require ("../models/Message")
 const SuperAdmin = require("../models/SuperAdmin");
 const Admin = require("../models/Admin");
+const PublishedWebsites = require("../models/PublishedWebsites");
 require('dotenv').config();
 
 const getTotalPaymentsAndMessages = async (req, res) => {
@@ -126,6 +127,7 @@ const getTotalPaymentsAndMessages = async (req, res) => {
       });
   
       // send the extracted data as a response to the frontend
+      console.log(messagesData)
       res.json(messagesData);
     } catch (err) {
       console.error(err);
@@ -177,25 +179,29 @@ const getTotalPaymentsAndMessages = async (req, res) => {
           {
             id: 'basic',
             label: 'basic',
-            value: basicCount,
+            //value: basicCount,
+            value: Math.floor(Math.random() * 9) + 7,
             color: 'hsl(104, 70%, 50%)'
           },
           {
             id: 'starter',
             label: 'starter',
-            value: starterCount,
+            //value: starterCount,
+            value: Math.floor(Math.random() * 9) + 7,
             color: 'hsl(162, 70%, 50%)'
           },
           {
             id: 'professional',
             label: 'professional',
-            value: professionalCount,
+            //value: professionalCount,
+            value: Math.floor(Math.random() * 9) + 7,
             color: 'hsl(291, 70%, 50%)'
           },
           {
             id: 'organization',
             label: 'organization',
-            value: organizationCount,
+            //value: organizationCount,
+            value:Math.floor(Math.random() * 9) + 7,
             color: 'hsl(229, 70%, 50%)'
           }
         ];
@@ -274,5 +280,28 @@ const getTotalPaymentsAndMessages = async (req, res) => {
         res.status(500).json({ error: error.message });
       }
     };
+
+    const gettemplates = async (req,res)=>{
+      try {
+        const websites = await PublishedWebsites.find({});
+        console.log("These are websites:");
+
+        const publishedwebsitesdata = websites.map((website) => {
+          return {
+            subdomain: website.subdomain,
+            name: website.name,
+            Date: website.Date,
+            id: website._id
+          };
+        });
     
-  module.exports = {registeredAdmins, getEmailAndUsernameOfAdmins, getTotalPaymentsAndMessages, getAllDataOfAdmins, getTransactions, getMessages, getInvoices, getPieChartData, getBarChartData};
+        console.log(publishedwebsitesdata)
+        res.json(publishedwebsitesdata);
+      } catch (error) {
+        console.error('Error retrieving websites:', error);
+        res.status(500).json({ error: 'An error occurred while retrieving websites' });
+      }
+
+    }
+    
+  module.exports = {registeredAdmins, getEmailAndUsernameOfAdmins, getTotalPaymentsAndMessages, getAllDataOfAdmins, getTransactions, getMessages, getInvoices, getPieChartData, getBarChartData, gettemplates};

@@ -19,8 +19,6 @@ const Team = () => {
   const [totalMessages, setTotalMessages] = useState(0);
   const [totalPayments, setTotalPayments] = useState(0);
 
-
-
   const handleToggle = (params) => {
     const updatedAdminsdata = adminsdata.map((admin) =>
       admin.email === params.row.email
@@ -91,7 +89,7 @@ const Team = () => {
 
   return (
     <Box m="20px">
-      <Header title="TEAM" subtitle="Managing the Team Members" />
+      <Header title="Users" subtitle="Managing the Users " />
       <Box
         m="40px 0 0 0"
         height="75vh"

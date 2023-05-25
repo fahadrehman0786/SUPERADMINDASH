@@ -8,11 +8,10 @@ import Header from "../../components/Header";
 import axios from 'axios';
 import React, { useState, useEffect } from "react";
 import ReplyForm from "../../components/ReplyForm";
+import Button from '@mui/material/Button';
 
 const Messages = () => {
   const [email, setEmail] = useState('')
-
-
 
   const [fetchData, setFetchData] = useState(true);
 
@@ -59,7 +58,7 @@ const Messages = () => {
       filterable: false,
       disableColumnMenu: true,
       renderCell: (params) => (
-        <button onClick={() => handleReply(params)}>Reply</button>
+        <Button onClick={() => handleReply(params)}>Reply</Button>
       ),
     },
     
@@ -68,7 +67,7 @@ const Messages = () => {
   return (
     <>
     <Box m="20px">
-      <Header title="TEAM" subtitle="Managing the Team Members" />
+      <Header title="Messages" subtitle="Manage Messages" />
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -80,7 +79,7 @@ const Messages = () => {
             borderBottom: "none",
           },
           "& .name-column--cell": {
-            color: colors.greenAccent[300],
+            color: '#40AFC0',
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: colors.blueAccent[700],

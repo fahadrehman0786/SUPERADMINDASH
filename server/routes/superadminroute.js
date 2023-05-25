@@ -1,5 +1,5 @@
 const express = require('express');
-const { registeredAdmins , getEmailAndUsernameOfAdmins,  getTotalPaymentsAndMessages, getAllDataOfAdmins, getTransactions, getMessages, getInvoices, getPieChartData,getBarChartData} =require('../controllers/superadmin.controller');
+const { registeredAdmins , getEmailAndUsernameOfAdmins,  getTotalPaymentsAndMessages, getAllDataOfAdmins, getTransactions, getMessages, getInvoices, getPieChartData,getBarChartData, gettemplates} =require('../controllers/superadmin.controller');
 const { registerMail }= require("../controllers/mailer")
 
 const router = express.Router();
@@ -14,5 +14,6 @@ router.get('/getinvoices',getInvoices)
 router.post('/mailer',registerMail)
 router.get('/getpiechartdata',getPieChartData)
 router.get('/getbarchartdata',getBarChartData)
+router.get('/gettemplates',gettemplates)
 
 module.exports = router;
